@@ -167,19 +167,19 @@ class SrgClient extends Client
         $sessionStatus = session_status();
         switch ($sessionStatus) {
             default:
-            case PHP_SESSION_DISABLED: //Если сессия отключена
-            case PHP_SESSION_NONE: //Если сессия включена но не создана.
+            case PHP_SESSION_DISABLED: /** if session disabled */
+            case PHP_SESSION_NONE: /** if session enabled but not create */
                 if (session_start()) {
                     $token = (!empty($_SESSION['snc_auth_token']) ? $_SESSION['snc_auth_token'] : false);
                 } else {
                     $token = false;
                 }
                 break;
-            case PHP_SESSION_ACTIVE: //если механизм сессий включен и сессия создана.
+            case PHP_SESSION_ACTIVE: /** if session enabled and create */
                 $token = (!empty($_SESSION['snc_auth_token']) ? $_SESSION['snc_auth_token'] : false);
                 break;
         }
-        if (!$token) { //делаем запрос на новый токен
+        if (!$token) { /** get request new token */
             $token = $this->requestToken();
             if (!empty($token)) {
                 if (session_status() === PHP_SESSION_ACTIVE) {
