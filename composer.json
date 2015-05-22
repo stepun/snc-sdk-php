@@ -1,5 +1,5 @@
 {
-    "name": "storencash/snc-sdk-php",
+    "name": "stepun/snc-sdk-php",
     "description": "SDK for PHP - Use StorenCash.com in your PHP project.",
     "keywords": ["storencash","sdk","snc"],
     "type": "library",
@@ -13,7 +13,7 @@
     "support": {
         "forum": "http://help.storencash.com/forum/"
     },
-    "homepage": "https://gist.github.com/stepun/8c09fa528356c4de8fb8",
+    "homepage": "https://github.com/stepun/snc-sdk-php",
     "require": {
         "php": ">=5.3.3",
         "guzzle/guzzle": "~3.7"
