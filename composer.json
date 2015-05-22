@@ -1,0 +1,33 @@
+{
+    "name": "storencash/snc-sdk-php",
+    "description": "SDK for PHP - Use StorenCash.com in your PHP project.",
+    "keywords": ["storencash","sdk","snc"],
+    "type": "library",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Store&Cash",
+            "homepage": "http://storencash.com"
+        }
+    ],
+    "support": {
+        "forum": "http://help.storencash.com/forum/"
+    },
+    "homepage": "https://gist.github.com/stepun/8c09fa528356c4de8fb8",
+    "require": {
+        "php": ">=5.3.3",
+        "guzzle/guzzle": "~3.7"
+    },
+    "require-dev" : {
+        "ext-openssl": "*",
+        "doctrine/cache": "~1.0",
+        "phpunit/phpunit" : "~4.0",
+        "monolog/monolog": "~1.4",
+        "symfony/yaml": "~2.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "Snc": "src/"
+        }
+    }
+}
