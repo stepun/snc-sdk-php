@@ -95,7 +95,7 @@ class SrgClient extends Client
                  * Групповая операция
                  * Получение остатков в разрезе номенклатуры по выбранной группе (товаров в размере)
                  */
-                $response = $this->postApi($this->getConfigure()[Options::API_URL_REMAINS], ['action' => 'listbyGroupId'], $params['listByPG']);
+                $response = $this->postApi($this->getConfigure()[Options::API_URL_REMAINS], ['action' => 'listbyGroupId'], ['list' => $params['listByPG']]);
             } else {
                 throw new InvalidArgumentException('Parameters is wrong! '
                     . 'Valid params: 1. {id int(10)} - for get remains by ID; '
