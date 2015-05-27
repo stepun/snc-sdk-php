@@ -244,7 +244,7 @@ class SrgClient extends Client
 
     public function postApi($url, $params = [], $body = [])
     {
-        $request = $this->getClient()->post($url, null, $body);
+        $request = $this->getClient()->post($url, $body);
         if (!empty($params)) {
             $query = $request->getQuery();
             foreach ($params as $key => $value) {
