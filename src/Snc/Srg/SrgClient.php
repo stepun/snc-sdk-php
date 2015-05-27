@@ -90,6 +90,12 @@ class SrgClient extends Client
                      */
                     $response = $this->getApi($this->getConfigure()[Options::API_URL_REMAINS], array_merge(['action' => 'byProductId'], $params));
                 }
+            } else if (isset($params['listByPG'])) {
+                /**
+                 * Групповая операция
+                 * Получение остатков в разрезе номенклатуры по выбранной группе (товаров в размере)
+                 */
+                $response = $this->postApi($this->getConfigure()[Options::API_URL_REMAINS], ['action' => 'listbyGroupId'], $params['listByPG']);
             } else {
                 throw new InvalidArgumentException('Parameters is wrong! '
                     . 'Valid params: 1. {id int(10)} - for get remains by ID; '
@@ -236,9 +242,19 @@ class SrgClient extends Client
         return $request->send();
     }
 
-    public function postApi($url)
+    public function postApi($url, $params = [], $body = [])
     {
-
+        $request = $this->getClient()->post($url, null, $body);
+        if (!empty($params)) {
+            $query = $request->getQuery();
+            foreach ($params as $key => $value) {
+                $query->add($key, $value);
+            }
+        }
+        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
+        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
+        $request->setHeader('token', $this->getToken());
+        return $request->send();
     }
 
     public function putApi($url)
