@@ -231,6 +231,12 @@ class SrgClient extends Client
         }
     }
 
+    /**
+     * Отправка GET API запроса
+     * @param $url
+     * @param array $params
+     * @return Response
+     */
     public function getApi($url, $params = [])
     {
         $request = $this->getClient()->get($url);
@@ -246,6 +252,13 @@ class SrgClient extends Client
         return $request->send();
     }
 
+    /**
+     * Отправка POST API
+     * @param $url
+     * @param array $params
+     * @param array $body
+     * @return Response
+     */
     public function postApi($url, $params = [], $body = [])
     {
         $request = $this->getClient()->post($url, null, $body);
@@ -261,14 +274,36 @@ class SrgClient extends Client
         return $request->send();
     }
 
-    public function putApi($url)
+    /**
+     * Отправка PUT API
+     * @param $url
+     * @param array $params
+     * @param array $body
+     * @return Response
+     */
+    public function putApi($url, $params = [], $body = [])
     {
-
+        $request = $this->getClient()->put($url, null, $body);
+        if (!empty($params)) {
+            $query = $request->getQuery();
+            foreach ($params as $key => $value) {
+                $query->add($key, $value);
+            }
+        }
+        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
+        $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
+        $request->setHeader('token', $this->getToken());
+        return $request->send();
     }
 
+    /**
+     * Отправка DELETE API
+     * @param $url
+     * @return Response
+     */
     public function deleteApi($url)
     {
-        $this->getClient()->delete($url);
+        $request = $this->getClient()->delete($url);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
         $request->setHeader('token', $this->getToken());
