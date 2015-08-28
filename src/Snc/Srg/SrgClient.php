@@ -259,7 +259,7 @@ class SrgClient extends Client
      * @param array $body
      * @return Response
      */
-    public function postApi($url, $params = [], $body = [])
+    public function postApi($url, $params = [], $body = [], $fields = [])
     {
         $request = $this->getClient()->post($url, null, $body);
         if (!empty($params)) {
@@ -267,6 +267,9 @@ class SrgClient extends Client
             foreach ($params as $key => $value) {
                 $query->add($key, $value);
             }
+        }
+        if (!empty($fields)) {
+            $request->addPostFields($fields);
         }
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
