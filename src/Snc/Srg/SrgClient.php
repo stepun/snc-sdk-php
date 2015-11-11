@@ -28,6 +28,7 @@ class SrgClient extends Client
     protected $ticket;
     protected $configure = [
         'base_url'  => 'https://storencash.com/api/',
+        'session_name' => 'snc_auth_token',
         'auth'      => 'v1_ticket.json',
         'remains'   => 'v1_remains.json',
         'product'   => 'v1_product.json',
@@ -180,20 +181,20 @@ class SrgClient extends Client
             case PHP_SESSION_DISABLED: /** if session disabled */
             case PHP_SESSION_NONE: /** if session enabled but not create */
                 if (session_start()) {
-                    $token = (!empty($_SESSION['snc_auth_token']) ? $_SESSION['snc_auth_token'] : false);
+                    $token = (!empty($_SESSION[$this->getConfigure()['session_name']]) ? $_SESSION[$this->getConfigure()['session_name']] : false);
                 } else {
                     $token = false;
                 }
                 break;
             case PHP_SESSION_ACTIVE: /** if session enabled and create */
-                $token = (!empty($_SESSION['snc_auth_token']) ? $_SESSION['snc_auth_token'] : false);
+                $token = (!empty($_SESSION[$this->getConfigure()['session_name']]) ? $_SESSION[$this->getConfigure()['session_name']] : false);
                 break;
         }
         if (!$token) { /** get request new token */
             $token = $this->requestToken();
             if (!empty($token)) {
                 if (session_status() === PHP_SESSION_ACTIVE) {
-                    $_SESSION['snc_auth_token'] = $token;
+                    $_SESSION[$this->getConfigure()['session_name']] = $token;
                 }
             }
         }
@@ -218,7 +219,7 @@ class SrgClient extends Client
                 $token = $this->generateToken($this->getConfigure()[Options::PRIVATE_KEY], $this->getTicket());
                 $this->setToken($token);
                 if (session_status() === PHP_SESSION_ACTIVE) {
-                    $_SESSION['snc_auth_token'] = $token;
+                    $_SESSION[$this->getConfigure()['session_name']] = $token;
                 }
                 return $token;
             } else {
