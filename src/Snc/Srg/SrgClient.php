@@ -136,7 +136,7 @@ class SrgClient extends Client
      * @param $params
      * @return mixed
      */
-    public function getAPIData($url, $params)
+    public function getAPIData($url, $params = [])
     {
         $response = $this->getApi($url, $params);
         $body = json_decode($response->getBody(true), true);
