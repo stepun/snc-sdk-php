@@ -131,6 +131,95 @@ class SrgClient extends Client
     }
 
     /**
+     * Public method getApi with verify token
+     * @param $url
+     * @param $params
+     * @return mixed
+     */
+    public function getAPIData($url, $params)
+    {
+        $response = $this->getApi($url, $params);
+        $body = json_decode($response->getBody(true), true);
+        if (!empty($body['status'])) {
+            if ($body['status'] == 'fail' || $body['status'] == 'error') {
+                if (!empty($body['code']) && ($body['code'] == 418 || $body['code'] == 401) ) {
+                    $this->loop++;
+                    $this->requestToken();
+                    if ($this->loop < 10) {
+                        return $this->getAPIData($url, $params);
+                    } else {
+                        throw new CyclicRequestTokenException('Error cyclic request ticket to the server');
+                    }
+                }
+            }
+            return $body;
+        } else {
+            throw new InvalidContactingException('Error contacting the server');
+        }
+    }
+
+    /**
+     * Public method postApi with verify token
+     *
+     * @param $url
+     * @param array $params
+     * @param array $body
+     * @param array $fields
+     * @return array|mixed
+     */
+    public function postAPIData($url, $params = [], $body = [], $fields = [])
+    {
+        $response = $this->postApi($url, $params, $body, $fields);
+        $body = json_decode($response->getBody(true), true);
+        if (!empty($body['status'])) {
+            if ($body['status'] == 'fail' || $body['status'] == 'error') {
+                if (!empty($body['code']) && ($body['code'] == 418 || $body['code'] == 401) ) {
+                    $this->loop++;
+                    $this->requestToken();
+                    if ($this->loop < 10) {
+                        return $this->postAPIData($url, $params, $body, $fields);
+                    } else {
+                        throw new CyclicRequestTokenException('Error cyclic request ticket to the server');
+                    }
+                }
+            }
+            return $body;
+        } else {
+            throw new InvalidContactingException('Error contacting the server');
+        }
+    }
+
+    /**
+     * Public method putApi with verify token
+     * @param $url
+     * @param array $params
+     * @param array $body
+     * @param array $fields
+     * @return array|mixed
+     */
+    public function putAPIData($url, $params = [], $body = [], $fields = [])
+    {
+        $response = $this->putApi($url, $params, $body, $fields);
+        $body = json_decode($response->getBody(true), true);
+        if (!empty($body['status'])) {
+            if ($body['status'] == 'fail' || $body['status'] == 'error') {
+                if (!empty($body['code']) && ($body['code'] == 418 || $body['code'] == 401) ) {
+                    $this->loop++;
+                    $this->requestToken();
+                    if ($this->loop < 10) {
+                        return $this->putAPIData($url, $params, $body, $fields);
+                    } else {
+                        throw new CyclicRequestTokenException('Error cyclic request ticket to the server');
+                    }
+                }
+            }
+            return $body;
+        } else {
+            throw new InvalidContactingException('Error contacting the server');
+        }
+    }
+
+    /**
      * Checking the status of the response from a remote server
      *
      * @param $body
