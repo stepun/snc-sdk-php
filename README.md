@@ -102,7 +102,7 @@ $client = new SyncSnc([
     ]
 ]);
 
-$response = $client->getClient()->getApi('v1_storage.json');
+$response = $client->getClient()->getAPIData('v1_storage.json');
 echo print_r(
     json_decode($response->getBody(true), true), 
     true
