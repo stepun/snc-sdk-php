@@ -53,5 +53,6 @@ class ClientOptions
         API_URL_MEASURE       = 'measure',
         API_URL_OPERATIONS    = 'operations',
         API_URL_STORES        = 'stores',
-        API_URL_COMPANIES     = 'companies';
+        API_URL_COMPANIES     = 'companies',
+        API_URL_CATEGORY      = 'category';
 }

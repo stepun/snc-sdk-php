@@ -33,6 +33,7 @@ class SrgClient extends Client
         'remains'   => 'v1_remains.json',
         'product'   => 'v1_product.json',
         'groups'    => 'v1_groups.json',
+        'category'  => 'v1_category.json',
         'measure'   => 'v1_measure.json',
         'operation' => 'v1_operation.json',
         'store'     => 'v1_storage.json',
