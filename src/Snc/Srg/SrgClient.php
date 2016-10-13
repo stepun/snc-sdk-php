@@ -352,7 +352,8 @@ class SrgClient extends Client
         $request->setHeader('token', $this->getToken());
         try {
             $response = $request->send();
-        } catch (ClientErrorResponseException $e) {
+        } catch (\Exception $e) {
+            file_put_contents('classgetApi.txt', get_class($e));
             $response = $this->parseAuth($e);
         }
         return $response;
@@ -382,7 +383,8 @@ class SrgClient extends Client
         $request->setHeader('token', $this->getToken());
         try {
             $response = $request->send();
-        } catch (ClientErrorResponseException $e) {
+        } catch (\Exception $e) {
+            file_put_contents('classpostApi.txt', get_class($e));
             $response = $this->parseAuth($e);
         }
         return $response;
@@ -414,7 +416,7 @@ class SrgClient extends Client
         try {
             $response = $request->send();
         } catch (\Exception $e) {
-            file_put_contents('class.txt', get_class($e));
+            file_put_contents('classputApi.txt', get_class($e));
             $response = $this->parseAuth($e);
         }
         return $response;
