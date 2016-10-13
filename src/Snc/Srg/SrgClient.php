@@ -310,7 +310,11 @@ class SrgClient extends Client
         $request = $this->getClient()->put($this->getConfigure()[Options::API_URL_AUTH] . '/' . $this->getConfigure()[Options::PUBLIC_KEY]);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
-        $response = $request->send();
+        try {
+            $response = $request->send();
+        } catch (ClientErrorResponseException $e) {
+            $response = $this->parseAuth($e);
+        }
         $body = json_decode($response->getBody(true), true);
 
         if (!empty($body['status'])) {
@@ -352,8 +356,7 @@ class SrgClient extends Client
         $request->setHeader('token', $this->getToken());
         try {
             $response = $request->send();
-        } catch (\Exception $e) {
-            file_put_contents('classgetApi.txt', get_class($e));
+        } catch (ClientErrorResponseException $e) {
             $response = $this->parseAuth($e);
         }
         return $response;
@@ -383,8 +386,7 @@ class SrgClient extends Client
         $request->setHeader('token', $this->getToken());
         try {
             $response = $request->send();
-        } catch (\Exception $e) {
-            file_put_contents('classpostApi.txt', get_class($e));
+        } catch (ClientErrorResponseException $e) {
             $response = $this->parseAuth($e);
         }
         return $response;
@@ -415,8 +417,7 @@ class SrgClient extends Client
         $request->setHeader('token', $this->getToken());
         try {
             $response = $request->send();
-        } catch (\Exception $e) {
-            file_put_contents('classputApi.txt', get_class($e));
+        } catch (ClientErrorResponseException $e) {
             $response = $this->parseAuth($e);
         }
         return $response;
@@ -449,10 +450,7 @@ class SrgClient extends Client
     {
         $body = json_decode($e->getResponse()->getBody(), true);
         if (!empty($body['status'])) {
-            if ($e->getCode() == ClientOptions::HTTP_CODE_418 || $e->getCode() == ClientOptions::HTTP_CODE_401) {
-                $body['code'] = $e->getCode();
-                return $e->getResponse();
-            }
+            return $e->getResponse();
         } else {
             throw new ClientErrorResponseException($e->getMessage());
         }
