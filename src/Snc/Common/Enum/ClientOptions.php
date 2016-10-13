@@ -55,4 +55,8 @@ class ClientOptions
         API_URL_STORES        = 'stores',
         API_URL_COMPANIES     = 'companies',
         API_URL_CATEGORY      = 'category';
+
+    const HTTP_CODE_500 = 500;
+    const HTTP_CODE_401 = 401;
+    const HTTP_CODE_418 = 418;
 }

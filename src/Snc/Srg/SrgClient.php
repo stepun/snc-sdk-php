@@ -8,11 +8,13 @@
 
 namespace Snc\Srg;
 
+use Guzzle\Http\Exception\BadResponseException;
 use Snc\Common\Enum\ClientOptions as Options;
 use Guzzle\Http\Client;
 use Guzzle\Http\EntityBody;
 use Guzzle\Http\Message\Request;
 use Guzzle\Http\Message\Response;
+use Snc\Common\Enum\ClientOptions;
 use Snc\Srg\Exception\CyclicRequestTokenException;
 use Snc\Srg\Exception\InvalidContactingException;
 use Snc\Srg\Exception\InvalidArgumentException;
@@ -125,9 +127,15 @@ class SrgClient extends Client
              * @link https://gist.github.com/stepun/abc58553c1a7c98640dd#list-groups
              * @var Response $response
              */
-            $response = $this->getApi($this->getConfigure()[Options::API_URL_GROUPS]);
+            try {
+                $response = $this->getApi($this->getConfigure()[Options::API_URL_GROUPS]);
+            } catch (BadResponseException $e) {
+                $body = $this->parseAuth($e);
+            }
         }
-        $body = json_decode($response->getBody(true), true);
+        if (empty($body)) {
+            $body = json_decode($response->getBody(true), true);
+        }
         return $this->_verifyStatus($body, $params, 'getGroups');
     }
 
@@ -143,7 +151,7 @@ class SrgClient extends Client
         $body = json_decode($response->getBody(true), true);
         if (!empty($body['status'])) {
             if ($body['status'] == 'fail' || $body['status'] == 'error') {
-                if (!empty($body['code']) && ($body['code'] == 418 || $body['code'] == 401) ) {
+                if (!empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418 || $body['code'] == ClientOptions::HTTP_CODE_401) ) {
                     $this->loop++;
                     $this->requestToken();
                     if ($this->loop < 10) {
@@ -174,7 +182,7 @@ class SrgClient extends Client
         $body = json_decode($response->getBody(true), true);
         if (!empty($body['status'])) {
             if ($body['status'] == 'fail' || $body['status'] == 'error') {
-                if (!empty($body['code']) && ($body['code'] == 418 || $body['code'] == 401) ) {
+                if (!empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418 || $body['code'] == ClientOptions::HTTP_CODE_401) ) {
                     $this->loop++;
                     $this->requestToken();
                     if ($this->loop < 10) {
@@ -204,7 +212,7 @@ class SrgClient extends Client
         $body = json_decode($response->getBody(true), true);
         if (!empty($body['status'])) {
             if ($body['status'] == 'fail' || $body['status'] == 'error') {
-                if (!empty($body['code']) && ($body['code'] == 418 || $body['code'] == 401) ) {
+                if (!empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418 || $body['code'] == ClientOptions::HTTP_CODE_401) ) {
                     $this->loop++;
                     $this->requestToken();
                     if ($this->loop < 10) {
@@ -340,7 +348,12 @@ class SrgClient extends Client
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
         $request->setHeader('token', $this->getToken());
-        return $request->send();
+        try {
+            $response = $request->send();
+        } catch (BadResponseException $e) {
+            $response = $this->parseAuth($e);
+        }
+        return $response;
     }
 
     /**
@@ -365,7 +378,12 @@ class SrgClient extends Client
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
         $request->setHeader('token', $this->getToken());
-        return $request->send();
+        try {
+            $response = $request->send();
+        } catch (BadResponseException $e) {
+            $response = $this->parseAuth($e);
+        }
+        return $response;
     }
 
     /**
@@ -378,6 +396,7 @@ class SrgClient extends Client
     public function putApi($url, $params = [], $body = [], $fields = [])
     {
         $request = $this->getClient()->put($url, null, $body);
+
         if (!empty($params)) {
             $query = $request->getQuery();
             foreach ($params as $key => $value) {
@@ -390,7 +409,12 @@ class SrgClient extends Client
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
         $request->setHeader('token', $this->getToken());
-        return $request->send();
+        try {
+            $response = $request->send();
+        } catch (BadResponseException $e) {
+            $response = $this->parseAuth($e);
+        }
+        return $response;
     }
 
     /**
@@ -404,7 +428,29 @@ class SrgClient extends Client
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
         $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
         $request->setHeader('token', $this->getToken());
-        return $request->send();
+        try {
+            $response = $request->send();
+        } catch (BadResponseException $e) {
+            $response = $this->parseAuth($e);
+        }
+        return $response;
+    }
+
+    /**
+     * @param $e BadResponseException
+     * @return mixed
+     */
+    private function parseAuth(&$e)
+    {
+        $body = json_decode($e->getResponse()->getBody(), true);
+        if (!empty($body['status'])) {
+            if ($e->getCode() == ClientOptions::HTTP_CODE_418 || $e->getCode() == ClientOptions::HTTP_CODE_401) {
+                $body['code'] = $e->getCode();
+                return $e->getResponse();
+            }
+        } else {
+            throw new BadResponseException($e->getMessage());
+        }
     }
 
 
