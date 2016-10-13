@@ -9,6 +9,7 @@
 namespace Snc\Srg;
 
 use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\Exception\ClientErrorResponseException;
 use Snc\Common\Enum\ClientOptions as Options;
 use Guzzle\Http\Client;
 use Guzzle\Http\EntityBody;
@@ -350,7 +351,7 @@ class SrgClient extends Client
         $request->setHeader('token', $this->getToken());
         try {
             $response = $request->send();
-        } catch (BadResponseException $e) {
+        } catch (ClientErrorResponseException $e) {
             $response = $this->parseAuth($e);
         }
         return $response;
@@ -380,7 +381,7 @@ class SrgClient extends Client
         $request->setHeader('token', $this->getToken());
         try {
             $response = $request->send();
-        } catch (BadResponseException $e) {
+        } catch (ClientErrorResponseException $e) {
             $response = $this->parseAuth($e);
         }
         return $response;
@@ -411,7 +412,7 @@ class SrgClient extends Client
         $request->setHeader('token', $this->getToken());
         try {
             $response = $request->send();
-        } catch (BadResponseException $e) {
+        } catch (ClientErrorResponseException $e) {
             $response = $this->parseAuth($e);
         }
         return $response;
@@ -430,7 +431,7 @@ class SrgClient extends Client
         $request->setHeader('token', $this->getToken());
         try {
             $response = $request->send();
-        } catch (BadResponseException $e) {
+        } catch (ClientErrorResponseException $e) {
             $response = $this->parseAuth($e);
         }
         return $response;
@@ -449,7 +450,7 @@ class SrgClient extends Client
                 return $e->getResponse();
             }
         } else {
-            throw new BadResponseException($e->getMessage());
+            throw new ClientErrorResponseException($e->getMessage());
         }
     }
 
