@@ -8,6 +8,7 @@
 
 namespace Snc\Srg;
 
+use Guzzle\Common\Exception\RuntimeException;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Exception\ClientErrorResponseException;
 use Snc\Common\Enum\ClientOptions as Options;
@@ -243,7 +244,7 @@ class SrgClient extends Client
     {
         if (!empty($body['status'])) {
             if ($body['status'] == 'fail' || $body['status'] == 'error') {
-                if (!empty($body['code']) && ($body['code'] == 418 || $body['code'] == 401) ) {
+                if (!empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418 || $body['code'] == ClientOptions::HTTP_CODE_401) ) {
                     $this->loop++;
                     $this->requestToken();
                     if ($this->loop < 10) {
@@ -412,7 +413,8 @@ class SrgClient extends Client
         $request->setHeader('token', $this->getToken());
         try {
             $response = $request->send();
-        } catch (ClientErrorResponseException $e) {
+        } catch (\Exception $e) {
+            file_put_contents('class.txt', get_class($e));
             $response = $this->parseAuth($e);
         }
         return $response;
