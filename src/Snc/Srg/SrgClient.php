@@ -189,8 +189,11 @@ class SrgClient extends Client
         $response = $this->postApi($url, $params, $body, $fields);
         $body = json_decode($response->getBody(true), true);
         if (!empty($body['status'])) {
-            if ($body['status'] == 'fail' || $body['status'] == 'error') {
-                if (!empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418 || $body['code'] == ClientOptions::HTTP_CODE_401) ) {
+            if ($body['status'] == ClientOptions::STATUS_FAIL
+                || $body['status'] == ClientOptions::STATUS_ERROR) {
+                if (!empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418
+                        || $body['code'] == ClientOptions::HTTP_CODE_401
+                        || $body['errors'] == ClientOptions::HTTP_CODE_401) ) {
                     $this->loop++;
                     $this->requestToken();
                     if ($this->loop < 10) {
@@ -219,8 +222,11 @@ class SrgClient extends Client
         $response = $this->putApi($url, $params, $body, $fields);
         $body = json_decode($response->getBody(true), true);
         if (!empty($body['status'])) {
-            if ($body['status'] == 'fail' || $body['status'] == 'error') {
-                if (!empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418 || $body['code'] == ClientOptions::HTTP_CODE_401) ) {
+            if ($body['status'] == ClientOptions::STATUS_FAIL
+                || $body['status'] == ClientOptions::STATUS_ERROR)) {
+                if (!empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418
+                        || $body['code'] == ClientOptions::HTTP_CODE_401
+                        || $body['errors'] == ClientOptions::HTTP_CODE_401) ) {
                     $this->loop++;
                     $this->requestToken();
                     if ($this->loop < 10) {
