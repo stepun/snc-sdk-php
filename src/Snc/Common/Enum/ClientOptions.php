@@ -59,4 +59,8 @@ class ClientOptions
     const HTTP_CODE_500 = 500;
     const HTTP_CODE_401 = 401;
     const HTTP_CODE_418 = 418;
+
+    const STATUS_ERROR = 'error';
+    const STATUS_FAIL = 'fail';
+    const STATUS_SUCCESS = 'success';
 }

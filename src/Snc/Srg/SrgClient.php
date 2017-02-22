@@ -152,9 +152,15 @@ class SrgClient extends Client
         $response = $this->getApi($url, $params);
         $body = json_decode($response->getBody(true), true);
         if (!empty($body['status'])) {
-            if ($body['status'] == 'fail' || $body['status'] == 'error') {
-                if (!empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418 || $body['code'] == ClientOptions::HTTP_CODE_401) ) {
-                    $this->loop++;
+            if ($body['status'] == ClientOptions::STATUS_FAIL
+                || $body['status'] == ClientOptions::STATUS_ERROR) {
+                if (
+                    !empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418
+                        || $body['code'] == ClientOptions::HTTP_CODE_401
+                        || $body['errors'] == ClientOptions::HTTP_CODE_401
+                    )
+                ) {
+                    $this->loop ++;
                     $this->requestToken();
                     if ($this->loop < 10) {
                         return $this->getAPIData($url, $params);
