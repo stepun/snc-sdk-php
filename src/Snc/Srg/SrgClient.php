@@ -223,7 +223,7 @@ class SrgClient extends Client
         $body = json_decode($response->getBody(true), true);
         if (!empty($body['status'])) {
             if ($body['status'] == ClientOptions::STATUS_FAIL
-                || $body['status'] == ClientOptions::STATUS_ERROR)) {
+                || $body['status'] == ClientOptions::STATUS_ERROR) {
                 if (!empty($body['code']) && ($body['code'] == ClientOptions::HTTP_CODE_418
                         || $body['code'] == ClientOptions::HTTP_CODE_401
                         || $body['errors'] == ClientOptions::HTTP_CODE_401) ) {
