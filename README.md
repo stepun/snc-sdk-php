@@ -44,7 +44,7 @@ class SyncSnc
 
     protected $config = [
         'snc' => [
-            'base_url'  => 'https://storencash.com/api/',
+            'base_url'  => 'https://my2can.com/api/',
             'key'       => '7d1ef***',
             'secret'    => '813c4***',
         ]
