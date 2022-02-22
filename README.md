@@ -1,5 +1,5 @@
 # Store & Cash SDK for PHP
-* URL [storencash.com](http://storencash.com)
+* URL [my2can.com](https://my2can.com)
 * API [Documentation](https://gist.github.com/stepun/8c09fa528356c4de8fb8)
 
 ## Add Snc-sdk-php using Composer
