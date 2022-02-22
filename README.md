@@ -1,4 +1,4 @@
-# Store & Cash SDK for PHP
+# 2can Clode SDK for PHP
 * URL [my2can.com](https://my2can.com)
 * API [Documentation](https://gist.github.com/stepun/8c09fa528356c4de8fb8)
 
