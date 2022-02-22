@@ -31,7 +31,7 @@ class SrgClient extends Client
     protected $token;
     protected $ticket;
     protected $configure = [
-        'base_url'  => 'https://storencash.com/api/',
+        'base_url'  => 'https://my2can.com/api/',
         'session_name' => 'snc_auth_token',
         'auth'      => 'v1_ticket.json',
         'remains'   => 'v1_remains.json',
